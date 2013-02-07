@@ -1,0 +1,29 @@
+{
+  "name": "gamesite",
+  "description": "A site for coordinating and tracking games of Node Realtime Chess",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.coffee",
+  "scripts": {
+    "test": "cake test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:snowyote/gamesite.git"
+  },
+  "author": "Ben Morse <snowyote@gmail.com> (http://ephemeralgarbage.com)",
+  "license": "MIT",
+  "dependencies": {
+    "coffee-script": "1.4.x",
+    "underscore": "1.4.x",
+    "browserify": "1.17.x",
+    "jsmin": "1.0.x",
+    "socket.io": "0.9.x",
+    "express": "3.1.x",
+    "config": "0.4.x"
+  },
+  "devDependencies": {
+    "mocha": "1.7.x",
+    "chai": "1.4.x"
+  }
+}

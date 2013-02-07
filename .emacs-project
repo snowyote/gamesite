@@ -1,0 +1,5 @@
+(setl ffip-regexp
+      (concat ".*\\.("
+              (mapconcat (lambda (x) x)
+                         '("coffee" "js" "json" "haml" "html" "sass" "css" "txt" "org") "|")
+              ")"))
