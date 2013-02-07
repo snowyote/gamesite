@@ -3,7 +3,7 @@
   "description": "A site for coordinating and tracking games of Node Realtime Chess",
   "version": "0.0.1",
   "private": true,
-  "main": "index.coffee",
+  "main": "app.coffee",
   "scripts": {
     "test": "cake test"
   },
