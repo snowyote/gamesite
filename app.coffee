@@ -16,22 +16,18 @@ startServer = (db) ->
   server.listen port
   console.log "Listening on port #{port}"
 
+  # Cookies all around, boys
   app.use(express.cookieParser(Config.SiteSecret))
+
+  # this is a shitty pattern.  I can do better than this.
   app.use(require('./lib/user_middleware')(db.collection('users')))
+
+  # routing for the API
+  require('./lib/routes')(app, db)
+
+
+
   app.use(express.static(__dirname + '/static'))
-
-  # routing
-  app.get '/games', (req, res) ->
-    db.collection('games').find {}, (err, result) ->
-      games = for game in result
-        game_id: game.game_id
-        state:   game.state
-        black:   game.black
-        white:   game.white
-      res.send games
-
-  app.get '/', (req, res) ->
-    res.send { oh: "hai" }
 
 Seq()
   .seq(startMongo)
