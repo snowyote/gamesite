@@ -23,7 +23,8 @@
     "config": "0.4.x",
     "optimist": "0.3.x",
     "mongodb": "1.2.x",
-    "yaml": "0.2.3"
+    "yaml": "0.2.3",
+    "seq": "0.3.x"
   },
   "devDependencies": {
     "mocha": "1.7.x",
