@@ -53,12 +53,22 @@ create_game = (db, req, black, white, next) ->
 
 
 module.exports = (app, db) ->
+  app.get '/api/games', (req, res) ->
+    query = {state: req.query.state, $or:[{black:req.userId},{white:req.userId}]}
+    query = {$or:[{black:req.userId},{white:req.userId}]}
+    db.collection('games').find query, (err, cursor) ->
+      if err
+        res.status(500).send {error: err}
+      else
+        cursor.toArray (err, games) ->
+          res.status(200).send(render_game(game) for game in games)
+
   app.get '/api/games/:id', (req, res) ->
     find_game db, req.params.id, (err, game) ->
       if err
         res.status(500).send {error: err}
       else unless game?
-        res.status(404)
+        res.send(404)
       else
         res.status(200).send render_game(game)
 
@@ -81,14 +91,15 @@ module.exports = (app, db) ->
       if err
         res.status(500).send {error: err}
       else
-        res.status(200).send(render_user(user) for user in cursor)
+        cursor.toArray (err, users) ->
+          res.status(200).send(render_user(user) for user in users)
 
   app.get '/api/users/:id', (req, res) ->
     find_user db, req.params.id, (err, user) ->
       if err
         res.status(500).send {error: err}
       else unless user?
-        res.status(404)
+        res.send(404)
       else
         res.status(200).send render_user(user)
 
