@@ -1,4 +1,5 @@
 ObjectID = require('mongodb').ObjectID
+_ = require 'underscore'
 Seq = require 'seq'
 
 render_user = (user) ->
@@ -11,36 +12,39 @@ render_game = (game) ->
   black:   render_user(game.black)
   white:   render_user(game.white)
 
-create_game = (db, req, black, white, cb) ->
+find_user = (db, id, next) ->
+  db.collection('users').findOne {_id: ObjectID(id)}, next
+
+make_game = (db, attrs, next) ->
+  game = _.extend({_id: new ObjectID}, attrs)
+  db.collection('games').save game, (err, item) -> next err, game
+
+create_game = (db, req, black, white, next) ->
   userId = req.userId
-  users = db.collection('users')
   games = db.collection('games')
+
+  # validate input
+  if black == white
+    return next("Don't play with yourself")
+  if black != userId && white != userId
+    return next("You can't arrange a game between two other players")
+
   Seq()
-    .seq_((next) ->
-      if black == white
-        return next("Don't play with yourself")
-      if black != userId && white != userId
-        return next("You can't arrange a game between two other players")
-      next())
-    .par_((next) ->
-      users.findOne {_id: ObjectID(black||userId)}, next)
-    .par_((next) ->
-      users.findOne {_id: ObjectID(white||userId)}, next)
-    .seq_((next, black, white) ->
+    .par_((next) -> find_user db, black||userId, next)
+    .par_((next) -> find_user db, white||userId, next)
+    .seq_((_, black, white) ->
       return next("Couldn't find black player") unless black?
       return next("Couldn't find white player") unless white?
-      oid = new ObjectID
+
       game =
-        _id:   oid
         state: 'new'
         black: black
         white: white
-      users.save game, (err, item) ->
-        next err, game)
-    .seq_((next, game) ->
-      cb null, game)
+
+      make_game db, game, next
+      )
     .catch((err) ->
-      cb err, null)
+      next err, null)
 
 
 module.exports = (app, db) ->
