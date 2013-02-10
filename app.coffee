@@ -18,6 +18,7 @@ startServer = (db) ->
 
   # Cookies all around, boys
   app.use(express.cookieParser(Config.SiteSecret))
+  app.use(express.bodyParser())
 
   # this is a shitty pattern.  I can do better than this.
   app.use(require('./lib/user_middleware')(db.collection('users')))
