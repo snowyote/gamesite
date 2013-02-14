@@ -1,21 +1,16 @@
-ObjectID = require('mongodb').ObjectID
-_ = require 'underscore'
-Seq = require 'seq'
-MongoClient = require('mongodb').MongoClient
-Config      = require('config').Top
+Util        = require '../lib/util'
 
-Util = require '../lib/util'
+ObjectID    = require('mongodb').ObjectID
+_           = require 'underscore'
+Seq         = require 'seq'
 
-
-# Eh.. there's probably a better way of doing this, right?
+database = require '../lib/database'
 db = null
-beforeEach (done) ->
-  unless db?
-    MongoClient.connect Config.Database, (err, _db) ->
-      db = _db
-      done()
-  else
-    done()
+before (done) ->
+  database.open (err) ->
+    db = database.db
+    done(err)
+after (done) -> database.close done
 
 broken_db =
   collection: (_) -> this

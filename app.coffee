@@ -4,12 +4,9 @@ server      = require('http').createServer(app)
 io          = require('socket.io').listen(server)
 _           = require('underscore')
 argv        = require('optimist').argv
-MongoClient = require('mongodb').MongoClient
 Config      = require('config').Top
 Seq         = require('seq')
-
-startMongo  = ->
-  MongoClient.connect Config.Database, this
+database    = require('./lib/database')
 
 startServer = (db) ->
   port = argv.port || 3000
@@ -30,5 +27,5 @@ startServer = (db) ->
   app.use(express.static(__dirname + '/static'))
 
 Seq()
-  .seq(startMongo)
+  .seq_(database.open)
   .seq(startServer)
