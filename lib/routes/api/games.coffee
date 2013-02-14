@@ -21,7 +21,7 @@ module.exports = (db) ->
         res.status(200).send Util.render_game(game)
 
   versus: (req, res) ->
-    Util.create_game db, req, req.userId, req.params.other, (err, game) ->
+    Util.create_game db, req.userId, req.params.other, (err, game) ->
       if err
         res.status(406).send {error: err}
       else

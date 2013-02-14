@@ -12,7 +12,10 @@ module.exports =
 
   update_user: (db, id, attrs, next) ->
     update = { $set: attrs }
-    db.collection('users').update {_id: ObjectID(id)}, update, next
+    db.collection('users').update {_id: ObjectID(id)}, update, {upsert: false, safe: true}, (err, num_updated) ->
+      return next(err) if err?
+      return next("Couldn't find user #{id} to update") if num_updated != 1
+      next(null)
 
   render_user: (user) ->
     user_id: user._id.toHexString()
@@ -29,15 +32,18 @@ module.exports =
     white:   game.white
 
   make_game: (db, attrs, next) ->
-    game = _.extend({_id: new ObjectID}, attrs)
+    game = _.extend({_id: new ObjectID}, _.omit(attrs, '_id'))
     db.collection('games').save game, (err, item) -> next err, game
 
-  create_game: (db, req, black, white, next) ->
+  create_game: (db, black, white, next) ->
     games = db.collection('games')
 
     # validate input
     if black == white
       return next("Don't play with yourself")
+
+    find_user = @find_user
+    make_game = @make_game
 
     Seq()
       .par_((next) -> find_user db, black, next)
@@ -54,4 +60,7 @@ module.exports =
         make_game db, game, next
         )
       .catch((err) ->
-        next err, null)
+        # @TODO this ensures we call the callback once-and-only-once
+        # but it's grotty.
+        next(err, null) if next?
+        next = null)
