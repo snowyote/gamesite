@@ -26,8 +26,7 @@ startServer = (db) ->
   # routing for the API
   require('./lib/routes')(app, db)
 
-
-
+  # otherwise, serve static files
   app.use(express.static(__dirname + '/static'))
 
 Seq()
