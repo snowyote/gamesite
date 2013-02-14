@@ -21,7 +21,7 @@ startServer = (db) ->
   app.use(express.bodyParser())
 
   # this is a shitty pattern.  I can do better than this.
-  app.use(require('./lib/user_middleware')(db.collection('users')))
+  app.use(require('./lib/user_middleware')(db))
 
   # routing for the API
   require('./lib/routes')(app, db)

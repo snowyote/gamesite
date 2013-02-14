@@ -6,6 +6,10 @@ module.exports =
   find_user: (db, id, next) ->
     db.collection('users').findOne {_id: ObjectID(id)}, next
 
+  make_user: (db, attrs, next) ->
+    user = _.extend({_id: new ObjectID}, attrs)
+    db.collection('users').save user, (err, item) -> next err, user
+
   update_user: (db, id, attrs, next) ->
     update = { $set: attrs }
     db.collection('users').update {_id: ObjectID(id)}, update, next

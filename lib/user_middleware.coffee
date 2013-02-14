@@ -1,21 +1,20 @@
 ObjectID = require('mongodb').ObjectID
+Util = require './util'
 
-module.exports = (users) ->
+module.exports = (db) ->
   (req, res, next) ->
     req.userId = req.signedCookies.userId
     user = null
 
     req.user = (cb) ->
       return cb(null, user) if user
-      users.findOne {_id: ObjectID(req.userId)}, (err, item) ->
+      Util.find_user req.userId, (err, item) ->
         user = item
         cb(err, item)
 
     return next() if req.userId?
 
-    oid = new ObjectID()
-    user = {name:"Friendly Newbie", _id:oid}
-    users.save user, (err, item) ->
+    Util.make_user db, {name:"Friendly Newbie"}, (err, user) ->
       throw err if err
-      res.cookie 'userId', (req.userId = oid.toHexString()), { signed: true }
+      res.cookie 'userId', (req.userId = user._id.toHexString()), { signed: true }
       next()
