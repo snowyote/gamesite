@@ -26,6 +26,11 @@ module.exports = (db) ->
       else
         res.status(200).send Util.render_user(user)
 
+  me: (req, res) ->
+    req.user (err, user) ->
+      return res.status(500).send {error: err} if err?
+      res.status(200).send Util.render_user(user)
+
   update: (req, res) ->
     if req.params.id != req.userId
       return res.status(500).send {error: "You can only modify yourself"}
