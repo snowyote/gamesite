@@ -1,12 +1,60 @@
+<!doctype html>
 <html>
   <head>
-<title>WELCOME TO THE WORLD OF GAMES</title>
-</head>
-<body>
-<h1>WELCOME TO THE WORLD OF GAMES</h1>
+    <title>WELCOME TO THE WORLD OF GAMES</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </head>
+  <body ng-app>
+    <div class="container">
+      <div class="row">
+        <div class="span9">
+          <h1>Realtime Chess Central Command</h1>
+        </div>
+        <div class="span3">
+          <div class="container" ng-controller="PlayerCtrl">
+            <a href="#playerDataModal" role="button" data-toggle="modal">
+              <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y" align="center"/><br>
+              <strong>{{player.name}}</strong>
+            </a>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="span12">
+          <h1>STUFF AND NONSENSE</h1>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <address>
+      <a href="mailto:snowyote@gmail.com">Benjamin Morse</a>
+    </address>
 
-<address>
-<a href="mailto:snowyote@gmail.com">Benjamin Morse</a>
-</address>
-</body>
+    <div id="playerDataModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="playerDataModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="playerDataModalLabel">Your Deal</h3>
+      </div>
+      <div class="modal-body">
+        <label>Name:</label>
+        <input type="text" ng-model="yourName" placeholder="Enter a name here">
+        <label>Email:</label>
+        <input type="text" ng-model="yourEmail" placeholder="Enter your email here">
+        <hr>
+        Or, if you think you've already got an account, durrrr i'll figure this out later
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary" id="playerDataSave">Save changes</button>
+      </div>
+    </div>
+
+  </body>
 </html>

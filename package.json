@@ -6,7 +6,8 @@
   "main": "app.coffee",
   "scripts": {
     "test": "cake test",
-    "watchtest": "NODE_ENV=test ./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter min --require coffee-script --require test/test_helper.coffee --colors --recursive --watch"
+    "watchtest": "NODE_ENV=test ./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter min --require coffee-script --require test/test_helper.coffee --colors --recursive --watch",
+    "watchcode": "coffee -cwb static/client.coffee"
   },
   "repository": {
     "type": "git",
