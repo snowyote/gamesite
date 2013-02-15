@@ -4,19 +4,7 @@ ObjectID    = require('mongodb').ObjectID
 _           = require 'underscore'
 Seq         = require 'seq'
 
-database = require '../lib/database'
-db = null
-before (done) ->
-  database.open (err) ->
-    db = database.db
-    done(err)
-after (done) -> database.close done
-
-broken_db =
-  collection: (_) -> this
-  findOne: (_, next) -> next("Oh no")
-  save: (_, next) -> next("Holy crap")
-  update: (_i, _dont, _care, next) -> next("Everything's on fire")
+setup_db()
 
 describe 'Util', ->
   alice    = null

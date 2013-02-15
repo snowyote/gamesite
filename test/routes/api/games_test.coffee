@@ -1,12 +1,6 @@
 GamesController = require('../../../lib/routes/api/games.coffee')
 
-database = require '../../../lib/database'
-db = null
-before (done) ->
-  database.open (err) ->
-    db = database.db
-    done(err)
-after (done) -> database.close done
+setup_db()
 
 describe 'GamesController', ->
   describe '#index', ->

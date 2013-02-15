@@ -2,24 +2,27 @@ mongodb     = require 'mongodb'
 MongoClient = mongodb.MongoClient
 Server      = mongodb.Server
 Config      = require('config').Top
+Q           = require('q')
+
+open_promise = null
+close_promise = null
+client = null
 
 module.exports =
-  db: null
+  open: ->
+    return open_promise if open_promise?
+    deferred = Q.defer()
 
-  client: null
-
-  open: (next) ->
-    # @TODO we can have two opens in flight and that sucks
-    # I should use promises
-    return next(null, @db) if @db?
     server = new Server(Config.Database.Host, Config.Database.Port, Config.Database.Options)
-    @client = new MongoClient(server)
-    @client.open (err) =>
-      return next(err) if err?
-      @db = @client.db(Config.Database.DB)
-      next(null, @db)
+    client = new MongoClient(server)
+    client.open (err) ->
+      return deferred.reject(err) if err?
+      resolution = client.db(Config.Database.DB)
+      deferred.resolve resolution
 
-  close: (next) ->
-    return next(null) unless @db?
-    @db = null
-    @client.close next
+    return (open_promise = deferred.promise)
+
+  close: ->
+    deferred = Q.defer()
+    client.close -> deferred.resolve()
+    return (close_promise = deferred.promise)

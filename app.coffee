@@ -26,6 +26,4 @@ startServer = (db) ->
   # otherwise, serve static files
   app.use(express.static(__dirname + '/static'))
 
-Seq()
-  .seq_(database.open)
-  .seq(startServer)
+database.open().then(startServer)
