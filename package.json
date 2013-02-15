@@ -5,7 +5,8 @@
   "private": true,
   "main": "app.coffee",
   "scripts": {
-    "test": "cake test"
+    "test": "cake test",
+    "watchtest": "NODE_ENV=test ./node_modules/.bin/mocha --compilers coffee:coffee-script --reporter min --require coffee-script --require test/test_helper.coffee --colors --recursive --watch"
   },
   "repository": {
     "type": "git",
