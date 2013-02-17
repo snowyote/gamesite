@@ -46,3 +46,6 @@ module.exports = class Model
       return next(err) if err?
       return next("Couldn't find #{@collection_name}/#{id} to update") if num_updated != 1
       next(null)
+
+  @delete: (id, next) ->
+    @collection().remove {_id: ObjectID(id)}, next

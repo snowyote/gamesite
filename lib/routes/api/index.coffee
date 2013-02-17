@@ -1,3 +1,3 @@
 module.exports =
-  games: require('./games')
-  users: require('./users')
+  GamesController: require('./games_controller')
+  UsersController: require('./users_controller')
