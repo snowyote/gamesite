@@ -13,6 +13,16 @@ startServer = (db) ->
   server.listen port
   console.log "Listening on port #{port}"
 
+  app.use(express.logger())
+  app.use(express.methodOverride())
+
+  app.use (req, res, next) ->
+    res.header('Access-Control-Allow-Origin', "localhost:#{port}");
+    res.header('Access-Control-Allow-Methods', 'OPTIONS,GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Accept,Origin,X-Requested-With');
+    res.header('Access-Control-Max-Age', 60 * 60 * 24 * 365);
+    next()
+
   # Cookies all around, boys
   app.use(express.cookieParser(Config.SiteSecret))
   app.use(express.bodyParser())
