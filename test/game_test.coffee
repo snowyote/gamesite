@@ -63,12 +63,14 @@ describe 'Game', ->
         expect(item.id).to.not.equal game.id
         done()
 
-    # it 'should propagate database errors', (done) ->
-    #   beforeEach -> Model.DB = broken_db
-    #   afterEach  -> Model.DB = good_db
-    #   Game.create game, (err, item) ->
-    #     expect(err).to.not.be.null
-    #     done()
+    describe "With a broken DB", ->
+      beforeEach -> Model.DB = broken_db
+      afterEach  -> Model.DB = good_db
+      it 'should propagate database errors', (done) ->
+        Game.create game, (err, new_game) ->
+          expect(err).to.not.be.null
+          expect(new_game).to.not.be.ok
+          done()
 
   describe '#make', ->
     it 'should fail if black doesn\'t exist', (done) ->
@@ -103,9 +105,11 @@ describe 'Game', ->
           expect(found_game).to.deep.equal new_game
           done()
 
-    # it 'should propagate database errors', (done) ->
-    #   beforeEach -> Model.DB = broken_db
-    #   afterEach  -> Model.DB = good_db
-    #   Game.make game, (err, new_game) ->
-    #     expect(err).to.not.be.null
-    #     done()
+    describe "With a broken DB", ->
+      beforeEach -> Model.DB = broken_db
+      afterEach  -> Model.DB = good_db
+      it 'should propagate database errors', (done) ->
+        Game.make alice.id, bob.id, (err, new_game) ->
+          expect(err).to.not.be.null
+          expect(new_game).to.not.be.ok
+          done()

@@ -26,6 +26,7 @@ global.setup_db = (next) ->
 global.broken_db =
   collection: (_) -> this
   findOne: (_, next) -> next("Oh no")
+  find: (_, next) -> next("Run! Mustard!")
   save: (_, next) -> next("Holy crap")
   update: (_i, _dont, _care, next) -> next("Everything's on fire")
   remove: (_, next) -> next()
