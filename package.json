@@ -32,6 +32,8 @@
   "devDependencies": {
     "mocha": "1.7.x",
     "chai": "1.4.x",
+    "sinon": "1.5.x",
+    "supertest": "0.5.x",
     "nodemon": "0.7.x"
   }
 }
