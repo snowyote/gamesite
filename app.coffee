@@ -7,8 +7,10 @@ argv        = require('optimist').argv
 Config      = require('config').Top
 Seq         = require('seq')
 database    = require('./lib/database')
+Model       = require('./lib/model')
 
 startServer = (db) ->
+  Model.DB = db
   port = argv.port || 3000
   server.listen port
   console.log "Listening on port #{port}"

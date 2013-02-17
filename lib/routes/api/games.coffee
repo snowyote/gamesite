@@ -1,28 +1,27 @@
-Util = require '../../util'
+Game = require '../../game'
 
-module.exports = (db) ->
+module.exports =
   index: (req, res) ->
     query = {state: req.query.state, $or:[{black:req.userId},{white:req.userId}]}
     query = {$or:[{black:req.userId},{white:req.userId}]}
-    db.collection('games').find query, (err, cursor) ->
+    Game.find.find query, (err, games) ->
       if err
         res.status(500).send {error: err}
       else
-        cursor.toArray (err, games) ->
-          res.status(200).send(Util.render_game(game) for game in games)
+        res.status(200).send(game.render() for game in games)
 
   show: (req, res) ->
-    Util.find_game db, req.params.id, (err, game) ->
+    Game.find req.params.id, (err, game) ->
       if err
         res.status(500).send {error: err}
       else unless game?
         res.send(404)
       else
-        res.status(200).send Util.render_game(game)
+        res.status(200).send game.render()
 
   versus: (req, res) ->
-    Util.create_game db, req.userId, req.params.other, (err, game) ->
+    Game.make req.userId, req.params.other, (err, game) ->
       if err
         res.status(406).send {error: err}
       else
-        res.status(200).send Util.render_game(game)
+        res.status(200).send game.render()

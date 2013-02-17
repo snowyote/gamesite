@@ -1,5 +1,5 @@
-module.exports = (app, db) ->
-  api = require('./api')(db)
+module.exports = (app) ->
+  api = require('./api')
 
   app.get  '/api/games',               api.games.index
   app.get  '/api/games/:id',           api.games.show

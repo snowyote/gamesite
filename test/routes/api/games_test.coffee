@@ -1,6 +1,7 @@
 GamesController = require('../../../lib/routes/api/games.coffee')
 
-setup_db()
+Model = require '../../../lib/model'
+setup_db((err, db) -> Model.DB = db)
 
 describe 'GamesController', ->
   describe '#index', ->

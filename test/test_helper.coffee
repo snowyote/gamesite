@@ -14,12 +14,11 @@ class global.MockResponse
     @on_send(@stat, @body)
 
 database = require '../lib/database'
-global.db = null
 
-global.setup_db = ->
+global.setup_db = (next) ->
   before (done) ->
     database.open()
-      .then((_db) -> global.db = _db; done(null))
+      .then((_db) -> next(null, _db); done(null))
       .fail((err) -> done(err))
   after (done) ->
     database.close().then(done)
@@ -29,3 +28,4 @@ global.broken_db =
   findOne: (_, next) -> next("Oh no")
   save: (_, next) -> next("Holy crap")
   update: (_i, _dont, _care, next) -> next("Everything's on fire")
+  remove: (_, next) -> next()
