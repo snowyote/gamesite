@@ -46,7 +46,7 @@ describe 'User', ->
         expect(err).to.be.null
         User.find bob.id, (err, user) ->
           expect(err).to.be.null
-          expect(user.attrs.name).to.equal 'Bobular'
+          expect(user.name).to.equal 'Bobular'
           done()
     it 'should raise an error if the user doesn\'t exist', (done) ->
       dudeid = new ObjectID()
@@ -66,4 +66,3 @@ describe 'User', ->
         id: sporf.id
         name: "Sporf"
         email: "hoo@hey.edu"
-        private: "crap"         #fixme.

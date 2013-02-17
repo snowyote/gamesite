@@ -7,18 +7,21 @@ module.exports = class Model
   @collection: ->
     Model.DB.collection(@collection_name)
 
+  attributes: (document = this) ->
+    _.pick(document, @constructor.attrs)
+
   constructor: (document) ->
-    @attrs = _.omit document, '_id'
+    _.extend this, @attributes(document)
     @id = (document._id || new ObjectID()).toHexString()
 
   save: (next) ->
     @constructor.collection().save @document(), next
 
   document: ->
-    _.extend {_id: new ObjectID(@id)}, @attrs
+    _.extend {_id: new ObjectID(@id)}, @attributes()
 
   render: ->
-    _.extend {id: @id}, @attrs
+    _.extend {id: @id}, @attributes()
 
   @find: (id_or_query, next) ->
     mk = (item) => new this(item)

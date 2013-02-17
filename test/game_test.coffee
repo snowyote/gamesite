@@ -8,6 +8,11 @@ good_db = null
 Model = require '../lib/model'
 setup_db((err, db) -> good_db = Model.DB = db)
 
+describe '_', ->
+  describe '#pick', ->
+    it "Should work with arrays", ->
+      _.pick({a:"a", b:"b", c:"c"}, ["a", "b"]).should.deep.equal({a:"a", b:"b"})
+
 describe 'Game', ->
   alice    = null
   bob      = null
@@ -87,7 +92,7 @@ describe 'Game', ->
     it 'should create a game in the "new" state', (done) ->
       Game.make alice.id, bob.id, (err, new_game) ->
         expect(err).to.be.null
-        expect(game.attrs.state).to.equal 'new'
+        expect(game.state).to.equal 'new'
         done()
 
     it 'should save the game to the database', (done) ->

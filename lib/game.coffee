@@ -5,6 +5,8 @@ User = require './user'
 module.exports = class Game extends Model
   @collection_name: 'games'
 
+  @attrs: ['black', 'white', 'state']
+
   @make: (black, white, next) ->
     create = (args...) => @create args...
 
