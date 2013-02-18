@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "mocha": "1.7.x",
+    "mocha-as-promised": "1.2.x",
     "chai": "1.4.x",
     "sinon": "1.5.x",
     "supertest": "0.5.x",
