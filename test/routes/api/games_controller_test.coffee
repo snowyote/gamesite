@@ -1,6 +1,6 @@
 lib = '../../../lib'
 GamesController = require("#{lib}/routes/api/games_controller.coffee")
-Seq             = require "seq"
+Q               = require 'q'
 Model           = require "#{lib}/model"
 User            = require "#{lib}/user"
 Game            = require "#{lib}/game"
@@ -39,13 +39,10 @@ describe 'GamesController', ->
       white: frank.id
       state: 'new'
 
-    Seq()
-      .set([User, Game])
-      .parEach((item) -> item.collection().remove {}, this)
-      .set([alice, bob, frank, ab_game, bf_game])
-      .parEach((item) -> item.save this)
-      .seq_((next) -> done())
-      .catch((err) -> done err, null)
+    Q.all([User.flush(), Game.flush()]).
+      then(-> Q.all _.map([alice, bob, frank, ab_game, bf_game], (x) -> x.save())).
+      then(-> done()).
+      catch((err) -> done(err))
 
   describe '#index', ->
     it 'should list games of the queried state', (done) ->

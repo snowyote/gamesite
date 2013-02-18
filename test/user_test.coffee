@@ -1,6 +1,6 @@
 ObjectID    = require('mongodb').ObjectID
 _           = require 'underscore'
-Seq         = require 'seq'
+Q           = require 'q'
 User        = require '../lib/user'
 
 Model = require '../lib/model'
@@ -14,12 +14,10 @@ describe 'User', ->
     alice = new User({name: "Alice"})
     bob   = new User({name: "Bob"})
 
-    Seq()
-      .seq_((next) -> User.collection().remove {}, next)
-      .seq_((next) -> alice.save next)
-      .seq_((next) -> bob.save next)
-      .seq_((next) -> done())
-      .catch((err) -> done err, null)
+    User.flush().
+      then(-> Q.all [alice.save(), bob.save()]).
+      then(-> done()).
+      catch((err) -> done(err))
 
   describe '#new', ->
     it 'should round-trip with #document', ->

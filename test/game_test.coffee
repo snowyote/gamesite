@@ -1,8 +1,8 @@
 ObjectID    = require('mongodb').ObjectID
 _           = require 'underscore'
-Seq         = require 'seq'
 User        = require '../lib/user'
 Game        = require '../lib/game'
+Q = require 'q'
 
 good_db = null
 Model = require '../lib/model'
@@ -26,14 +26,13 @@ describe 'Game', ->
       white: alice.id
       state: 'new'
 
-    Seq()
-      .seq_((next) -> User.collection().remove {}, next)
-      .seq_((next) -> Game.collection().remove {}, next)
-      .seq_((next) -> alice.save next)
-      .seq_((next) -> bob.save next)
-      .seq_((next) -> game.save next)
-      .seq_((next) -> done())
-      .catch((err) -> done err, null)
+    User.flush().
+      then(-> Game.flush()).
+      then(-> alice.save()).
+      then(-> bob.save()).
+      then(-> game.save()).
+      then(-> done()).
+      catch((err) -> done(err))
 
   describe '#find', ->
     it 'should find an existing game', (done) ->
