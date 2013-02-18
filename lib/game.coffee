@@ -30,6 +30,7 @@ module.exports = class Game extends Model
         )
       .catch((err) ->
         # @TODO this ensures we call the callback once-and-only-once
-        # but it's grotty.
+        # but it's grotty.  I'll use promises once Model supports
+        # promises.
         next(err, null) if next?
         next = null)

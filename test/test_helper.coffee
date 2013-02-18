@@ -1,8 +1,10 @@
 chai = require 'chai'
 
-global.expect = chai.expect
-global.assert = chai.assert
-global.should = chai.should()
+global.expect  = chai.expect
+global.assert  = chai.assert
+global.should  = chai.should()
+global.sinon   = require 'sinon'
+global.request = require 'supertest'
 
 class global.MockRequest
   constructor: (@data) ->
@@ -11,7 +13,7 @@ class global.MockResponse
   constructor: (@on_send) ->
   status: (@stat) ->
   send: (@body) ->
-    @on_send(@stat, @body)
+    @on_send?(@stat, @body)
 
 database = require '../lib/database'
 
@@ -20,8 +22,8 @@ global.setup_db = (next) ->
     database.open()
       .then((_db) -> next(null, _db); done(null))
       .fail((err) -> done(err))
-  after (done) ->
-    database.close().then(done)
+  # after (done) ->
+  #   database.close().then(done)
 
 global.broken_db =
   collection: (_) -> this
