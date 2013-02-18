@@ -40,10 +40,10 @@ describe 'GamesController', ->
       state: 'new'
 
     Seq()
-      .seq_((next) -> User.collection().remove {}, next)
-      .seq_((next) -> Game.collection().remove {}, next)
+      .set([User, Game])
+      .parEach((item) -> item.collection().remove {}, this)
       .set([alice, bob, frank, ab_game, bf_game])
-      .parEach((item, index) -> item.save this)
+      .parEach((item) -> item.save this)
       .seq_((next) -> done())
       .catch((err) -> done err, null)
 
@@ -57,6 +57,7 @@ describe 'GamesController', ->
         .end(done)
 
     it 'should not list games not of the queried state', ->
+
     it 'should 500 on a db error', ->
   describe '#show', ->
     it 'should show a game', ->
