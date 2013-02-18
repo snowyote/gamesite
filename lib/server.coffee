@@ -3,7 +3,7 @@ app     = express()
 Config  = require('config').Top
 Model   = require('./model')
 
-app.use(express.logger())
+app.use(express.logger()) if Config.UseLogger
 app.use(express.methodOverride())
 
 app.use (req, res, next) ->

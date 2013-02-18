@@ -5,3 +5,4 @@ Top:
     DB: "development"
     Opts:
   SiteSecret: "Hurf Burf"
+  UseLogger: true
