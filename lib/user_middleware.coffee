@@ -5,20 +5,22 @@ module.exports = (req, res, next) ->
   user = null
 
   mkuser = (next) ->
-    User.create {name:"Friendly Newbie"}, (err, _user) ->
-      return next(err) if err?
+    User.pcreate({name:"Friendly Newbie"}).then((_user) ->
       user = _user
       req.userId = user.id
       res.cookie 'userId', user.id, { signed: true }
-      next(null, user)
+      next(null, user)).
+      fail((err) -> next(err))
 
   req.user = (cb) ->
     return cb(null, user) if user
-    User.find req.userId, (err, _user) ->
-      return cb(err) if err?
-      user = _user
-      return cb(err, _user) if _user?
-      mkuser(cb)
+    User.pfind(req.userId).
+      then((_user) ->
+        if _user?
+          cb(null, user = _user)
+        else
+          mkuser(cb)
+      ).fail((err) -> cb(err))
 
   return next() if req.userId?
 

@@ -1,4 +1,4 @@
-Seq = require 'seq'
+Q = require 'q'
 Model = require './model'
 User = require './user'
 
@@ -7,30 +7,18 @@ module.exports = class Game extends Model
 
   @attrs: ['black', 'white', 'state']
 
-  @make: (black, white, next) ->
-    create = (args...) => @create args...
+  @pmake: (black, white) ->
+    create = (attrs) => @pcreate attrs
 
     # validate input
     if black == white
-      return next("Don't play with yourself")
+      return Q.fcall -> throw new Error "Don't play with yourself"
 
-    Seq()
-      .par_((next) -> User.find black, next)
-      .par_((next) -> User.find white, next)
-      .seq_((_, black_user, white_user) ->
-        return next("Couldn't find black player") unless black_user?
-        return next("Couldn't find white player") unless white_user?
+    Q.all([User.pfind(black), User.pfind(white)]).
+      spread (black_user, white_user) ->
+        throw new Error("Couldn't find black player") unless black_user?
+        throw new Error("Couldn't find white player") unless white_user?
+        create {state: 'new', black: black, white: white}
 
-        attrs =
-          state: 'new'
-          black: black
-          white: white
-
-        create attrs, next
-        )
-      .catch((err) ->
-        # @TODO this ensures we call the callback once-and-only-once
-        # but it's grotty.  I'll use promises once Model supports
-        # promises.
-        next(err, null) if next?
-        next = null)
+  @make: (black, white, next) ->
+    @pmake(black, white).then(((model) -> next(null, model)), ((err) -> next(err)))

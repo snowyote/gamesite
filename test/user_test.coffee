@@ -25,32 +25,23 @@ describe 'User', ->
       _.omit(new User(doc).document(), '_id').should.deep.equal doc
 
   describe '#find', ->
-    it 'should find an existing user', (done) ->
-      User.find alice.id, (err, user) ->
-        expect(err).to.be.null
+    it 'should find an existing user', ->
+      User.pfind(alice.id).then (user) ->
         expect(user).to.not.be.null
         expect(user).to.not.equal alice
         expect(user).to.deep.equal alice
-        done()
-    it 'should return null when a user doesn\'t exist', (done) ->
-      User.find new ObjectID().toHexString(), (err, user) ->
-        expect(err).to.be.null
-        expect(user).to.be.null
-        done()
+
+    it 'should fail when a user doesn\'t exist', ->
+      should_fail User.pfind(new ObjectID().toHexString())
 
   describe '#update', ->
-    it 'should update an existing user', (done) ->
-      User.update bob.id, {name: "Bobular"}, (err) ->
-        expect(err).to.be.null
-        User.find bob.id, (err, user) ->
-          expect(err).to.be.null
-          expect(user.name).to.equal 'Bobular'
-          done()
-    it 'should raise an error if the user doesn\'t exist', (done) ->
-      dudeid = new ObjectID()
-      User.update dudeid.toHexString(), {name: "Dude"}, (err, rv) ->
-        expect(err).to.not.be.null
-        done()
+    it 'should update an existing user', ->
+      User.pupdate(bob.id, {name: "Bobular"}).
+        then(-> User.pfind(bob.id)).
+        then((user) -> expect(user.name).to.equal 'Bobular')
+
+    it 'should raise an error if the user doesn\'t exist', ->
+      should_fail User.pupdate(new ObjectID().toHexString(), {name: "Dude"})
 
   describe '#render', ->
     it 'should show a user in the format expected', ->

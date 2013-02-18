@@ -6,12 +6,14 @@ module.exports = class ResourceController
   index: ->
     query = @index_query()
     return @res.status(406).send "Unsupported query" unless query?
-    @resource_class.find query, (err, items) =>
-      @respond err, -> (item.render() for item in items)
+    @resource_class.pfind(query).
+      then((items) => @res.send (item.render() for item in items)).
+      fail((err) => @res.send(500, {error: err.message}))
 
   show: ->
-    @resource_class.find @req.params.id, (err, item) =>
-      @respond err, -> item.render()
+    @resource_class.pfind(@req.params.id).
+      then((item) => @res.send item.render()).
+      fail((err) => @res.send 404)
 
   update: ->
     update = { $set: @update_filter(@req.body) }

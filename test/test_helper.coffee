@@ -1,10 +1,24 @@
+require("mocha-as-promised")()
+
 chai = require 'chai'
+Q = require 'q'
 
 global.expect  = chai.expect
 global.assert  = chai.assert
 global.should  = chai.should()
 global.sinon   = require 'sinon'
 global.request = require 'supertest'
+
+global.should_fail = (promise, err) ->
+  deferred = Q.defer()
+  promise.
+    then((o) -> deferred.reject new Error "Unexpected success").
+    fail((e) ->
+      if !err? || e.message == err
+        deferred.resolve e
+      else
+        deferred.reject new Error "#{e} isn't #{err}")
+  deferred.promise
 
 class global.MockRequest
   constructor: (@data) ->
