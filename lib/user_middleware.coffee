@@ -5,7 +5,7 @@ module.exports = (req, res, next) ->
   user = null
 
   mkuser = (next) ->
-    User.pcreate({name:"Friendly Newbie"}).then((_user) ->
+    User.create({name:"Friendly Newbie"}).then((_user) ->
       user = _user
       req.userId = user.id
       res.cookie 'userId', user.id, { signed: true }
@@ -14,7 +14,7 @@ module.exports = (req, res, next) ->
 
   req.user = (cb) ->
     return cb(null, user) if user
-    User.pfind(req.userId).
+    User.find(req.userId).
       then((_user) ->
         if _user?
           cb(null, user = _user)

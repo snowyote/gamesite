@@ -26,22 +26,22 @@ describe 'User', ->
 
   describe '#find', ->
     it 'should find an existing user', ->
-      User.pfind(alice.id).then (user) ->
+      User.find(alice.id).then (user) ->
         expect(user).to.not.be.null
         expect(user).to.not.equal alice
         expect(user).to.deep.equal alice
 
     it 'should fail when a user doesn\'t exist', ->
-      should_fail User.pfind(new ObjectID().toHexString())
+      should_fail User.find(new ObjectID().toHexString())
 
   describe '#update', ->
     it 'should update an existing user', ->
-      User.pupdate(bob.id, {name: "Bobular"}).
-        then(-> User.pfind(bob.id)).
+      User.update(bob.id, {name: "Bobular"}).
+        then(-> User.find(bob.id)).
         then((user) -> expect(user.name).to.equal 'Bobular')
 
     it 'should raise an error if the user doesn\'t exist', ->
-      should_fail User.pupdate(new ObjectID().toHexString(), {name: "Dude"})
+      should_fail User.update(new ObjectID().toHexString(), {name: "Dude"})
 
   describe '#render', ->
     it 'should show a user in the format expected', ->

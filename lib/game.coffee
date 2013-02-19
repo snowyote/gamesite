@@ -8,13 +8,13 @@ module.exports = class Game extends Model
   @attrs: ['black', 'white', 'state']
 
   @pmake: (black, white) ->
-    create = (attrs) => @pcreate attrs
+    create = (attrs) => @create attrs
 
     # validate input
     if black == white
       return Q.fcall -> throw new Error "Don't play with yourself"
 
-    Q.all([User.pfind(black), User.pfind(white)]).
+    Q.all([User.find(black), User.find(white)]).
       spread (black_user, white_user) ->
         throw new Error("Couldn't find black player") unless black_user?
         throw new Error("Couldn't find white player") unless white_user?

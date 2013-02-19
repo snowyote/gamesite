@@ -27,7 +27,7 @@ module.exports = class Model
   @flush: ->
     Q.ninvoke @collection(), 'remove', {}
 
-  @pfind: (id_or_query) ->
+  @find: (id_or_query) ->
     deferred = Q.defer()
 
     mk = (item) => new this(item)
@@ -43,32 +43,11 @@ module.exports = class Model
 
     return deferred.promise
 
-  @find: (id_or_query, next) ->
-    mk = (item) => new this(item)
-    if typeof(id_or_query) == "string"
-      @collection().findOne {_id: new ObjectID(id_or_query)}, (err, item) ->
-        return next(err, null) if (err? || !item?)
-        next err, mk(item)
-    else
-      @collection().find id_or_query, (err, cursor) ->
-        cursor.toArray (err, items) ->
-          next err, _.map(items, (item) -> mk(item))
-    null
-
-  @create: (attrs, next) ->
-    @pcreate(attrs).then(((model) -> next(null, model)), ((err) -> next(err)))
-    null
-
-  @pcreate: (attrs) ->
+  @create: (attrs) ->
     model = new this(_.extend {}, attrs,  {_id: new ObjectID()})
     model.save().then -> model
 
-  @update: (id, attrs, next) ->
-    @pupdate(id, attrs).
-      then(-> next(null)).
-      fail((err) -> next(err))
-
-  @pupdate: (id, attrs) ->
+  @update: (id, attrs) ->
     update = { $set: attrs }
     opts = {upsert: false, safe: true}
     Q.ninvoke(@collection(), 'update', {_id: ObjectID(id)}, update, opts).
@@ -76,5 +55,5 @@ module.exports = class Model
         if num_updated != 1
           throw new Error("Couldn't find #{@collection_name}/#{id} to update"))
 
-  @delete: (id, next) ->
-    @collection().remove {_id: ObjectID(id)}, next
+  @delete: (id) ->
+    Q.ninvoke @collection().remove {_id: ObjectID(id)}
