@@ -5,3 +5,4 @@ Top:
     DB: "test"
     Opts:
   SiteSecret: "Quack"
+  UseLogger: false
