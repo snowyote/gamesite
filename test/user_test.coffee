@@ -54,4 +54,18 @@ describe 'User', ->
       sporf.render().should.deep.equal
         id: sporf.id
         name: "Sporf"
+        mail_hash: sporf.mail_hash()
+
+  describe '#render_for_self', ->
+    it 'should show a user in the format expected', ->
+      sporf = new User
+        _id: new ObjectID
+        name: "Sporf"
         email: "hoo@hey.edu"
+        private: "crap"
+
+      sporf.render_for_self().should.deep.equal
+        id: sporf.id
+        name: "Sporf"
+        email: "hoo@hey.edu"
+        mail_hash: sporf.mail_hash()

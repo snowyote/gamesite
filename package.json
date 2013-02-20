@@ -27,7 +27,8 @@
     "mongodb": "1.2.x",
     "yaml": "0.2.3",
     "seq": "0.3.x",
-    "q": "0.8.x"
+    "q": "0.8.x",
+    "MD5": "1.0.x"
   },
   "devDependencies": {
     "mocha": "1.7.x",

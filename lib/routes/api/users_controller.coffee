@@ -9,7 +9,7 @@ module.exports = class UsersController extends ResourceController
       when 'offline' then {$or:[{online:{$exists:false}},{online:false}]}
   me: ->
     @req.user (err, user) ->
-      @respond err, -> user.render()
+      @respond err, -> user.render_for_self()
   update: ->
     return super() if @req.params.id == @req.userId
     @res.status(500).send {error: "You can only modify yourself"}
