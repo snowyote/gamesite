@@ -10,7 +10,7 @@
     <script src="client.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </head>
-  <body ng-app>
+  <body ng-app="siteApp">
     <div class="container">
       <div class="row">
         <div class="span9">
@@ -19,7 +19,7 @@
         <div class="span3">
           <div class="container" ng-controller="PlayerCtrl">
             <a href="#playerDataModal" role="button" data-toggle="modal">
-              <img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y" align="center"/><br>
+              <img ng-src="{{avatar(player.mail_hash)}}"/><br>
               <strong>{{player.name}}</strong>
             </a>
           </div>
