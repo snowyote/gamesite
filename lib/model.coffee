@@ -16,7 +16,7 @@ module.exports = class Model
     @id = (document._id || new ObjectID()).toHexString()
 
   save: ->
-    Q.ninvoke @constructor.collection(), 'save', @document()
+    Q.ninvoke @constructor.collection(), 'save', @document(), {safe:true}
 
   document: ->
     _.extend {_id: new ObjectID(@id)}, @attributes()
@@ -25,7 +25,7 @@ module.exports = class Model
     _.extend {id: @id}, @attributes()
 
   @flush: ->
-    Q.ninvoke @collection(), 'remove', {}
+    Q.ninvoke @collection(), 'remove', {}, {safe: true}
 
   @find: (id_or_query) ->
     deferred = Q.defer()
