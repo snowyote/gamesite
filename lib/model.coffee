@@ -28,20 +28,14 @@ module.exports = class Model
     Q.ninvoke @collection(), 'remove', {}, {safe: true}
 
   @find: (id_or_query) ->
-    deferred = Q.defer()
-
-    mk = (item) => new this(item)
     if typeof(id_or_query) == "string"
-      @collection().findOne {_id: new ObjectID(id_or_query)}, (err, item) ->
-        return deferred.reject(err || "Couldn't find #{id_or_query}") if (err? || !item?)
-        deferred.resolve mk(item)
+      Q.fcall(-> {_id: new ObjectID(id_or_query)}).
+        then((id) => Q.ninvoke(@collection(), 'findOne', id)).
+        then((item) => if item? then new this(item) else throw new Error "Couldn't find #{id_or_query}")
     else
-      @collection().find id_or_query, (err, cursor) ->
-        cursor.toArray (err, items) ->
-          return deferred.reject(err) if err?
-          deferred.resolve _.map(items, (item) -> mk(item))
-
-    return deferred.promise
+      Q.ninvoke(@collection(), 'find', id_or_query).
+        then((cursor) -> Q.ninvoke cursor, 'toArray').
+        then((items) => _.map(items, (item) => new this(item)))
 
   @create: (attrs) ->
     model = new this(_.extend {}, attrs,  {_id: new ObjectID()})

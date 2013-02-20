@@ -43,6 +43,10 @@ describe 'Game', ->
     it 'should fail when a game doesn\'t exist', ->
       should_fail Game.find(new ObjectID().toHexString())
 
+    it 'should find a set of games', ->
+      Game.find({}).then (items) ->
+        items.should.deep.equal [game]
+
   describe '#render', ->
     it 'should show a game in the format expected', ->
       game.render().should.deep.equal

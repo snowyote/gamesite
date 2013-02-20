@@ -49,17 +49,26 @@ describe 'GamesController', ->
       request(app)
         .get('/api/games?state=new')
         .set("Cookie", cookieForId(alice.id))
-        .expect(200)
-        .expect([ab_game.render()])
+        .expect(200, [ab_game.render()])
         .end(done)
 
     it 'should not list games not of the queried state', ->
 
-    it 'should 500 on a db error', ->
   describe '#show', ->
     it 'should show a game', ->
     it 'should 404 on a game that doesn\'t exist', ->
-    it 'should 500 on a db error', ->
   describe '#versus', ->
     it 'should create a game', ->
     it 'should 406 on invalid params', ->
+
+  # describe "with a broken DB", ->
+  #   good_db = Model.DB
+  #   before -> Model.DB = broken_db
+  #   after -> good_db
+
+  #   describe '#index', ->
+  #     it 'should 500 on a db error', ->
+  #   describe '#show', ->
+  #     it 'should 500 on a db error', ->
+  #   describe '#versus', ->
+  #     it 'should 406 on invalid params', ->
