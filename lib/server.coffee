@@ -24,6 +24,6 @@ app.use(require('./user_middleware'))
 require('./routes')(app)
 
 # otherwise, serve static files
-app.use(express.static(__dirname + '/static'))
+app.use(express.static(__dirname + '/../static'))
 
 module.exports = app
