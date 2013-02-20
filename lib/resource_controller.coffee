@@ -28,23 +28,23 @@ module.exports = class ResourceController
 
   create: ->
     @resource_class.create(@req.body).
-      then((item) => @res.send item.render()).
+      then((item) => @res.send 200, item.render()).
       fail((err) => @res.send 404)
 
   respond: (err, rv_cb) ->
-    return @res.status(500).send {error: err} if err
+    return @res.send(500, {error: err}) if err
 
     rv = rv_cb()
     unless rv?
-      @res.send(404)
+      @res.send 404
     else
-      @res.status(200).send(rv)
+      @res.send 200, rv
 
   respond_empty: (err) ->
     if err
-      @res.status(500).send {error: err}
+      @res.send 500, {error: err}
     else
-      @res.status(200).send()
+      @res.send 200
 
   update_filter: (doc) ->
     _.pick doc, @resource_class.attrs
