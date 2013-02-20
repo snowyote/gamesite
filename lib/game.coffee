@@ -7,7 +7,7 @@ module.exports = class Game extends Model
 
   @attrs: ['black', 'white', 'state']
 
-  @pmake: (black, white) ->
+  @make: (black, white) ->
     create = (attrs) => @create attrs
 
     # validate input
@@ -19,6 +19,3 @@ module.exports = class Game extends Model
         throw new Error("Couldn't find black player") unless black_user?
         throw new Error("Couldn't find white player") unless white_user?
         create {state: 'new', black: black, white: white}
-
-  @make: (black, white, next) ->
-    @pmake(black, white).then(((model) -> next(null, model)), ((err) -> next(err)))

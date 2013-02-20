@@ -62,23 +62,23 @@ describe 'Game', ->
       it 'should propagate database errors', ->
         should_fail Game.create(game)
 
-  describe '#pmake', ->
+  describe '#make', ->
     it 'should fail if black doesn\'t exist', ->
-      should_fail Game.pmake(new ObjectID().toHexString(), bob.id)
+      should_fail Game.make(new ObjectID().toHexString(), bob.id)
 
     it 'should fail if white doesn\'t exist', ->
-      should_fail Game.pmake(alice.id, new ObjectID().toHexString())
+      should_fail Game.make(alice.id, new ObjectID().toHexString())
 
     it 'should fail if black and white are the same', ->
-      should_fail Game.pmake(alice.id, alice.id)
+      should_fail Game.make(alice.id, alice.id)
 
     it 'should create a game in the "new" state', ->
-      Game.pmake(alice.id, bob.id).then (new_game) ->
+      Game.make(alice.id, bob.id).then (new_game) ->
         expect(game.state).to.equal 'new'
 
     it 'should save the game to the database', (done) ->
       new_game = null
-      Game.pmake(alice.id, bob.id).
+      Game.make(alice.id, bob.id).
         then((o) -> new_game = o; Game.find new_game.id).
         then((found_game) -> expect(found_game).to.deep.equal new_game)
 
@@ -86,4 +86,4 @@ describe 'Game', ->
       beforeEach -> Model.DB = broken_db
       afterEach  -> Model.DB = good_db
       it 'should propagate database errors', ->
-        should_fail Game.pmake(alice.id, bob.id)
+        should_fail Game.make(alice.id, bob.id)
