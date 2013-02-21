@@ -16,8 +16,9 @@ module.exports = class ResourceController
       fail((err) => @res.send 404)
 
   update: ->
-    update = { $set: @update_filter(@req.body) }
-    @resource_class.update(@req.body.id, update).
+    id = @req.params.id
+    @resource_class.update(id, @update_filter(@req.body)).
+      then(=> @resource_class.find id).
       then((item) => @res.send item.render()).
       fail((err) => @res.send 500, {error: err.message})
 

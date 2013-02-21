@@ -76,3 +76,12 @@ describe 'UsersController', ->
         .set("Cookie", cookieForId(alice.id))
         .expect(200, alice.render_for_self())
         .end(done)
+
+  describe '#update', ->
+    it 'should update a user', (done) ->
+      request(app)
+        .put("/api/users/#{alice.id}")
+        .set("Cookie", cookieForId(alice.id))
+        .send({name: "Alicia"})
+        .expect(_.extend(alice.render(), {name: "Alicia"}))
+        .end(done)
