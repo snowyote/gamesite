@@ -7,15 +7,14 @@ PlayerCtrl = ($scope, Player) ->
   $scope.player = Player
 
   $scope.avatar = (hash) ->
-    "http://www.gravatar.com/avatar/#{hash}?d=mm&f=y"
+    "http://www.gravatar.com/avatar/#{hash}?d=mm"
 
-  console.log "loading user"
   $.get '/api/users/me', (data) ->
-    console.log "Got player: #{JSON.stringify data}"
     $scope.$apply ->
       $scope.player = data
 
-$("#playerDataSave").click ->
-  console.log "Saving player: #{JSON.stringify $scope.player}"
-  $.put '/api/users/#{$scope.player.user_id}', $scope.player, ->
-    alert "SUCCESS PATROL"
+  $scope.saveUser = ->
+    $.ajax
+      url: "/api/users/#{$scope.player.id}"
+      type: "PUT"
+      data: $scope.player

@@ -22,7 +22,27 @@
               <img ng-src="{{avatar(player.mail_hash)}}"/><br>
               <strong>{{player.name}}</strong>
             </a>
+
+            <div id="playerDataModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="playerDataModalLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="playerDataModalLabel">Your Deal</h3>
+              </div>
+              <div class="modal-body">
+                <label>Name:</label>
+                <input type="text" ng-model="player.name" placeholder="Enter a name here">
+                <label>Email:</label>
+                <input type="text" ng-model="player.email" placeholder="Enter your email here">
+                <hr>
+                Or, if you think you've already got an account, durrrr i'll figure this out later
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn btn-primary" data-dismiss="modal" ng-click="saveUser()">Save changes</button>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
       <hr>
@@ -37,24 +57,6 @@
       <a href="mailto:snowyote@gmail.com">Benjamin Morse</a>
     </address>
 
-    <div id="playerDataModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="playerDataModalLabel" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="playerDataModalLabel">Your Deal</h3>
-      </div>
-      <div class="modal-body">
-        <label>Name:</label>
-        <input type="text" ng-model="yourName" placeholder="Enter a name here">
-        <label>Email:</label>
-        <input type="text" ng-model="yourEmail" placeholder="Enter your email here">
-        <hr>
-        Or, if you think you've already got an account, durrrr i'll figure this out later
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary" id="playerDataSave">Save changes</button>
-      </div>
-    </div>
 
   </body>
 </html>

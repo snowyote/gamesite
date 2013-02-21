@@ -13,20 +13,18 @@ siteApp.factory('Player', function() {
 PlayerCtrl = function($scope, Player) {
   $scope.player = Player;
   $scope.avatar = function(hash) {
-    return "http://www.gravatar.com/avatar/" + hash + "?d=mm&f=y";
+    return "http://www.gravatar.com/avatar/" + hash + "?d=mm";
   };
-  console.log("loading user");
-  return $.get('/api/users/me', function(data) {
-    console.log("Got player: " + (JSON.stringify(data)));
+  $.get('/api/users/me', function(data) {
     return $scope.$apply(function() {
       return $scope.player = data;
     });
   });
+  return $scope.saveUser = function() {
+    return $.ajax({
+      url: "/api/users/" + $scope.player.id,
+      type: "PUT",
+      data: $scope.player
+    });
+  };
 };
-
-$("#playerDataSave").click(function() {
-  console.log("Saving player: " + (JSON.stringify($scope.player)));
-  return $.put('/api/users/#{$scope.player.user_id}', $scope.player, function() {
-    return alert("SUCCESS PATROL");
-  });
-});
